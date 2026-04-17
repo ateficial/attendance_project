@@ -1,0 +1,684 @@
+[
+  {
+    "name": "subjects",
+    "type": "base",
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_subjects_code ON subjects (code)"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "subjects1234567",
+    "fields": [
+      {
+        "name": "code",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 20,
+        "id": "code1234567xxxx"
+      },
+      {
+        "name": "name_en",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 200,
+        "id": "nameen1234567xx"
+      },
+      {
+        "name": "name_ar",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 200,
+        "id": "namear1234567xx"
+      },
+      {
+        "name": "department",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 100,
+        "id": "department12345"
+      },
+      {
+        "name": "level",
+        "type": "number",
+        "required": false,
+        "min": 1,
+        "max": 4,
+        "noDecimal": true,
+        "id": "level1234567xxx"
+      },
+      {
+        "name": "credit_hours",
+        "type": "number",
+        "required": false,
+        "min": 1,
+        "max": 4,
+        "noDecimal": true,
+        "id": "credithours1234"
+      },
+      {
+        "name": "professor_id",
+        "type": "relation",
+        "required": false,
+        "collectionId": "professors12345",
+        "maxSelect": 1,
+        "id": "professorid1234"
+      }
+    ]
+  },
+  {
+    "name": "rooms",
+    "type": "base",
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_rooms_room_code ON rooms (room_code)"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "rooms1234567890",
+    "fields": [
+      {
+        "name": "room_code",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 20,
+        "id": "roomcode1234567"
+      },
+      {
+        "name": "building",
+        "type": "text",
+        "required": true,
+        "min": 1,
+        "max": 100,
+        "id": "building1234567"
+      },
+      {
+        "name": "capacity",
+        "type": "number",
+        "required": true,
+        "min": 1,
+        "max": 1000,
+        "noDecimal": true,
+        "id": "capacity1234567"
+      },
+      {
+        "name": "room_type",
+        "type": "select",
+        "required": false,
+        "maxSelect": 1,
+        "values": [
+          "Classroom",
+          "Lab",
+          "Lecture Hall"
+        ],
+        "id": "roomtype1234567"
+      },
+      {
+        "name": "equipment",
+        "type": "json",
+        "required": false,
+        "maxSize": 2000000,
+        "id": "equipment123456"
+      }
+    ]
+  },
+  {
+    "name": "professors",
+    "type": "base",
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_professors_national_id ON professors (national_id)",
+      "CREATE UNIQUE INDEX idx_professors_email ON professors (email)",
+      "CREATE UNIQUE INDEX idx_professors_rfid ON professors (rfid_uid) WHERE rfid_uid != ''"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "professors12345",
+    "fields": [
+      {
+        "name": "national_id",
+        "type": "text",
+        "required": true,
+        "min": 10,
+        "max": 20,
+        "id": "nationalid12345"
+      },
+      {
+        "name": "name_en",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 200,
+        "id": "nameen1234567xx"
+      },
+      {
+        "name": "name_ar",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 200,
+        "id": "namear1234567xx"
+      },
+      {
+        "name": "rfid_uid",
+        "type": "text",
+        "required": false,
+        "max": 50,
+        "id": "rfiduid1234567x"
+      },
+      {
+        "name": "session_pin",
+        "type": "text",
+        "required": true,
+        "min": 4,
+        "max": 6,
+        "pattern": "^[0-9]{4,6}$",
+        "id": "sessionpin12345"
+      },
+      {
+        "name": "department",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 100,
+        "id": "department12345"
+      },
+      {
+        "name": "academic_rank",
+        "type": "select",
+        "maxSelect": 1,
+        "values": [
+          "Professor",
+          "Associate Professor",
+          "Assistant Professor",
+          "Lecturer"
+        ],
+        "id": "academicrank123"
+      },
+      {
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "id": "email1234567xxx"
+      },
+      {
+        "name": "office_location",
+        "type": "text",
+        "required": false,
+        "max": 100,
+        "id": "officelocation1"
+      },
+      {
+        "name": "assigned_courses",
+        "type": "relation",
+        "collectionId": "subjects1234567",
+        "maxSelect": null,
+        "id": "assignedcourses"
+      },
+      {
+        "name": "active_session_status",
+        "type": "bool",
+        "id": "activesessionst"
+      },
+      {
+        "name": "schedule_id",
+        "type": "relation",
+        "collectionId": "schedules123456",
+        "maxSelect": 1,
+        "id": "scheduleid12345"
+      },
+      {
+        "name": "last_login",
+        "type": "date",
+        "id": "lastlogin123456"
+      },
+      {
+        "name": "password_hash",
+        "type": "text",
+        "required": true,
+        "min": 4,
+        "max": 200,
+        "id": "passwordhash123"
+      }
+    ]
+  },
+  {
+    "name": "groups",
+    "type": "base",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "groups123456789",
+    "fields": [
+      {
+        "name": "subject_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "subjects1234567",
+        "maxSelect": 1,
+        "id": "subjectid123456"
+      },
+      {
+        "name": "group_name",
+        "type": "text",
+        "required": true,
+        "min": 1,
+        "max": 50,
+        "id": "groupname123456"
+      },
+      {
+        "name": "section_number",
+        "type": "number",
+        "required": true,
+        "min": 1,
+        "max": 100,
+        "noDecimal": true,
+        "id": "sectionnumber12"
+      },
+      {
+        "name": "students",
+        "type": "relation",
+        "collectionId": "students1234567",
+        "maxSelect": null,
+        "id": "students1234567"
+      },
+      {
+        "name": "max_capacity",
+        "type": "number",
+        "min": 1,
+        "max": 500,
+        "noDecimal": true,
+        "id": "maxcapacity1234"
+      }
+    ]
+  },
+  {
+    "name": "students",
+    "type": "base",
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_students_national_id ON students (national_id)",
+      "CREATE UNIQUE INDEX idx_students_email ON students (email)",
+      "CREATE UNIQUE INDEX idx_students_rfid ON students (rfid_uid)"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "students1234567",
+    "fields": [
+      {
+        "name": "national_id",
+        "type": "text",
+        "required": true,
+        "min": 10,
+        "max": 20,
+        "id": "nationalid12345"
+      },
+      {
+        "name": "name_en",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 200,
+        "id": "nameen1234567xx"
+      },
+      {
+        "name": "name_ar",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 200,
+        "id": "namear1234567xx"
+      },
+      {
+        "name": "rfid_uid",
+        "type": "text",
+        "required": true,
+        "min": 8,
+        "max": 50,
+        "id": "rfiduid1234567x"
+      },
+      {
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "id": "email1234567xxx"
+      },
+      {
+        "name": "faculty",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 100,
+        "id": "faculty1234567x"
+      },
+      {
+        "name": "major",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 100,
+        "id": "major1234567xxx"
+      },
+      {
+        "name": "academic_year",
+        "type": "number",
+        "min": 1,
+        "max": 6,
+        "noDecimal": true,
+        "id": "academicyear123"
+      },
+      {
+        "name": "level_semester",
+        "type": "number",
+        "min": 1,
+        "max": 12,
+        "noDecimal": true,
+        "id": "levelsemester12"
+      },
+      {
+        "name": "enrollment_status",
+        "type": "select",
+        "maxSelect": 1,
+        "values": [
+          "Active",
+          "Inactive",
+          "Graduated",
+          "Suspended"
+        ],
+        "id": "enrollmentstatu"
+      },
+      {
+        "name": "group_id",
+        "type": "relation",
+        "collectionId": "groups123456789",
+        "maxSelect": 1,
+        "id": "groupid1234567x"
+      },
+      {
+        "name": "registered_courses",
+        "type": "relation",
+        "collectionId": "subjects1234567",
+        "maxSelect": null,
+        "id": "registeredcours"
+      },
+      {
+        "name": "attendance_percentage",
+        "type": "number",
+        "min": 0,
+        "max": 100,
+        "id": "attendanceperce"
+      },
+      {
+        "name": "last_seen",
+        "type": "date",
+        "id": "lastseen1234567"
+      },
+      {
+        "name": "status",
+        "type": "select",
+        "maxSelect": 1,
+        "values": [
+          "Present",
+          "Absent",
+          "Excused"
+        ],
+        "id": "status1234567xx"
+      }
+    ]
+  },
+  {
+    "name": "schedules",
+    "type": "base",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "schedules123456",
+    "fields": [
+      {
+        "name": "subject_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "subjects1234567",
+        "maxSelect": 1,
+        "id": "subjectid123456"
+      },
+      {
+        "name": "room_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "rooms1234567890",
+        "maxSelect": 1,
+        "id": "roomid1234567xx"
+      },
+      {
+        "name": "professor_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "professors12345",
+        "maxSelect": 1,
+        "id": "professorid1234"
+      },
+      {
+        "name": "group_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "groups123456789",
+        "maxSelect": 1,
+        "id": "groupid1234567x"
+      },
+      {
+        "name": "day_of_week",
+        "type": "select",
+        "required": true,
+        "maxSelect": 1,
+        "values": [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "id": "dayofweek123456"
+      },
+      {
+        "name": "start_time",
+        "type": "text",
+        "required": true,
+        "min": 5,
+        "max": 5,
+        "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+        "id": "starttime123456"
+      },
+      {
+        "name": "end_time",
+        "type": "text",
+        "required": true,
+        "min": 5,
+        "max": 5,
+        "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+        "id": "endtime1234567x"
+      },
+      {
+        "name": "duration_minutes",
+        "type": "number",
+        "required": true,
+        "min": 15,
+        "max": 300,
+        "noDecimal": true,
+        "id": "durationminutes"
+      },
+      {
+        "name": "semester",
+        "type": "select",
+        "required": true,
+        "maxSelect": 1,
+        "values": [
+          "Fall",
+          "Spring",
+          "Summer"
+        ],
+        "id": "semester1234567"
+      },
+      {
+        "name": "academic_year",
+        "type": "text",
+        "required": true,
+        "min": 4,
+        "max": 20,
+        "id": "academicyear123"
+      }
+    ]
+  },
+  {
+    "name": "sessions",
+    "type": "base",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "sessions1234567",
+    "fields": [
+      {
+        "name": "schedule_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "schedules123456",
+        "maxSelect": 1,
+        "id": "scheduleid12345"
+      },
+      {
+        "name": "professor_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "professors12345",
+        "maxSelect": 1,
+        "id": "professorid1234"
+      },
+      {
+        "name": "start_time",
+        "type": "date",
+        "required": true,
+        "id": "starttime123456"
+      },
+      {
+        "name": "end_time",
+        "type": "date",
+        "id": "endtime1234567x"
+      },
+      {
+        "name": "status",
+        "type": "select",
+        "required": true,
+        "maxSelect": 1,
+        "values": [
+          "Active",
+          "Closed",
+          "Cancelled"
+        ],
+        "id": "status1234567xx"
+      },
+      {
+        "name": "total_students",
+        "type": "number",
+        "min": 0,
+        "noDecimal": true,
+        "id": "totalstudents12"
+      },
+      {
+        "name": "present_count",
+        "type": "number",
+        "min": 0,
+        "noDecimal": true,
+        "id": "presentcount123"
+      },
+      {
+        "name": "absent_count",
+        "type": "number",
+        "min": 0,
+        "noDecimal": true,
+        "id": "absentcount1234"
+      }
+    ]
+  },
+  {
+    "name": "attendance_records",
+    "type": "base",
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_att_student_session ON attendance_records (student_id, session_id)"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "@request.auth.id != ''",
+    "deleteRule": "@request.auth.id != ''",
+    "id": "att_records1234",
+    "fields": [
+      {
+        "name": "student_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "students1234567",
+        "maxSelect": 1,
+        "id": "studentid123456"
+      },
+      {
+        "name": "session_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "sessions1234567",
+        "maxSelect": 1,
+        "id": "sessionid123456"
+      },
+      {
+        "name": "subject_id",
+        "type": "relation",
+        "required": true,
+        "collectionId": "subjects1234567",
+        "maxSelect": 1,
+        "id": "subjectid123456"
+      },
+      {
+        "name": "check_in_time",
+        "type": "date",
+        "required": true,
+        "id": "checkintime1234"
+      },
+      {
+        "name": "status",
+        "type": "select",
+        "required": true,
+        "maxSelect": 1,
+        "values": [
+          "Present",
+          "Absent",
+          "Late",
+          "Excused"
+        ],
+        "id": "status1234567xx"
+      },
+      {
+        "name": "verified",
+        "type": "bool",
+        "id": "verified1234567"
+      }
+    ]
+  }
+]

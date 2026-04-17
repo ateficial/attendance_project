@@ -1,0 +1,141 @@
+[
+  {
+    "name": "subjects",
+    "type": "base",
+    "schema": [
+      {"name": "code", "type": "text", "required": true, "options": {"min": 2, "max": 20}},
+      {"name": "name_en", "type": "text", "required": true, "options": {"min": 2, "max": 200}},
+      {"name": "name_ar", "type": "text", "required": true, "options": {"min": 2, "max": 200}},
+      {"name": "department", "type": "text", "required": true, "options": {"min": 2, "max": 100}},
+      {"name": "level", "type": "number", "required": false, "options": {"min": 1, "max": 4, "noDecimal": true}},
+      {"name": "credit_hours", "type": "number", "required": false, "options": {"min": 1, "max": 4, "noDecimal": true}},
+      {"name": "professor_id", "type": "relation", "required": false, "options": {"collectionId": "professors", "maxSelect": 1}}
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_subjects_code ON subjects (code)"],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  },
+  {
+    "name": "rooms",
+    "type": "base",
+    "schema": [
+      {"name": "room_code", "type": "text", "required": true, "options": {"min": 2, "max": 20}},
+      {"name": "building", "type": "text", "required": true, "options": {"min": 1, "max": 100}},
+      {"name": "capacity", "type": "number", "required": true, "options": {"min": 1, "max": 1000, "noDecimal": true}},
+      {"name": "room_type", "type": "select", "required": false, "options": {"maxSelect": 1, "values": ["Classroom", "Lab", "Lecture Hall"]}},
+      {"name": "equipment", "type": "json", "required": false, "options": {"maxSize": 2000000}}
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_rooms_room_code ON rooms (room_code)"],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  },
+  {
+    "name": "professors",
+    "type": "base",
+    "schema": [
+      {"name": "national_id", "type": "text", "required": true, "options": {"min": 10, "max": 20}},
+      {"name": "name_en", "type": "text", "required": true, "options": {"min": 2, "max": 200}},
+      {"name": "name_ar", "type": "text", "required": true, "options": {"min": 2, "max": 200}},
+      {"name": "rfid_uid", "type": "text", "required": false, "options": {"max": 50}},
+      {"name": "session_pin", "type": "text", "required": true, "options": {"min": 4, "max": 6, "pattern": "^[0-9]{4,6}$"}},
+      {"name": "department", "type": "text", "required": true, "options": {"min": 2, "max": 100}},
+      {"name": "academic_rank", "type": "select", "options": {"maxSelect": 1, "values": ["Professor", "Associate Professor", "Assistant Professor", "Lecturer"]}},
+      {"name": "email", "type": "email", "required": true},
+      {"name": "office_location", "type": "text", "required": false, "options": {"max": 100}},
+      {"name": "assigned_courses", "type": "relation", "options": {"collectionId": "subjects", "maxSelect": null}},
+      {"name": "active_session_status", "type": "bool"},
+      {"name": "schedule_id", "type": "relation", "options": {"collectionId": "schedules", "maxSelect": 1}},
+      {"name": "last_login", "type": "date"},
+      {"name": "password_hash", "type": "text", "required": true, "options": {"min": 4, "max": 200}}
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_professors_national_id ON professors (national_id)",
+      "CREATE UNIQUE INDEX idx_professors_email ON professors (email)",
+      "CREATE UNIQUE INDEX idx_professors_rfid ON professors (rfid_uid) WHERE rfid_uid != ''"
+    ],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  },
+  {
+    "name": "groups",
+    "type": "base",
+    "schema": [
+      {"name": "subject_id", "type": "relation", "required": true, "options": {"collectionId": "subjects", "maxSelect": 1}},
+      {"name": "group_name", "type": "text", "required": true, "options": {"min": 1, "max": 50}},
+      {"name": "section_number", "type": "number", "required": true, "options": {"min": 1, "max": 100, "noDecimal": true}},
+      {"name": "students", "type": "relation", "options": {"collectionId": "students", "maxSelect": null}},
+      {"name": "max_capacity", "type": "number", "options": {"min": 1, "max": 500, "noDecimal": true}}
+    ],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  },
+  {
+    "name": "students",
+    "type": "base",
+    "schema": [
+      {"name": "national_id", "type": "text", "required": true, "options": {"min": 10, "max": 20}},
+      {"name": "name_en", "type": "text", "required": true, "options": {"min": 2, "max": 200}},
+      {"name": "name_ar", "type": "text", "required": true, "options": {"min": 2, "max": 200}},
+      {"name": "rfid_uid", "type": "text", "required": true, "options": {"min": 8, "max": 50}},
+      {"name": "email", "type": "email", "required": true},
+      {"name": "faculty", "type": "text", "required": true, "options": {"min": 2, "max": 100}},
+      {"name": "major", "type": "text", "required": true, "options": {"min": 2, "max": 100}},
+      {"name": "academic_year", "type": "number", "options": {"min": 1, "max": 6, "noDecimal": true}},
+      {"name": "level_semester", "type": "number", "options": {"min": 1, "max": 12, "noDecimal": true}},
+      {"name": "enrollment_status", "type": "select", "options": {"maxSelect": 1, "values": ["Active", "Inactive", "Graduated", "Suspended"]}},
+      {"name": "group_id", "type": "relation", "options": {"collectionId": "groups", "maxSelect": 1}},
+      {"name": "registered_courses", "type": "relation", "options": {"collectionId": "subjects", "maxSelect": null}},
+      {"name": "attendance_percentage", "type": "number", "options": {"min": 0, "max": 100}},
+      {"name": "last_seen", "type": "date"},
+      {"name": "status", "type": "select", "options": {"maxSelect": 1, "values": ["Present", "Absent", "Excused"]}}
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_students_national_id ON students (national_id)",
+      "CREATE UNIQUE INDEX idx_students_email ON students (email)",
+      "CREATE UNIQUE INDEX idx_students_rfid ON students (rfid_uid)"
+    ],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  },
+  {
+    "name": "schedules",
+    "type": "base",
+    "schema": [
+      {"name": "subject_id", "type": "relation", "required": true, "options": {"collectionId": "subjects", "maxSelect": 1}},
+      {"name": "room_id", "type": "relation", "required": true, "options": {"collectionId": "rooms", "maxSelect": 1}},
+      {"name": "professor_id", "type": "relation", "required": true, "options": {"collectionId": "professors", "maxSelect": 1}},
+      {"name": "group_id", "type": "relation", "required": true, "options": {"collectionId": "groups", "maxSelect": 1}},
+      {"name": "day_of_week", "type": "select", "required": true, "options": {"maxSelect": 1, "values": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"]}},
+      {"name": "start_time", "type": "text", "required": true, "options": {"min": 5, "max": 5, "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"}},
+      {"name": "end_time", "type": "text", "required": true, "options": {"min": 5, "max": 5, "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"}},
+      {"name": "duration_minutes", "type": "number", "required": true, "options": {"min": 15, "max": 300, "noDecimal": true}},
+      {"name": "semester", "type": "select", "required": true, "options": {"maxSelect": 1, "values": ["Fall", "Spring", "Summer"]}},
+      {"name": "academic_year", "type": "text", "required": true, "options": {"min": 4, "max": 20}}
+    ],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  },
+  {
+    "name": "sessions",
+    "type": "base",
+    "schema": [
+      {"name": "schedule_id", "type": "relation", "required": true, "options": {"collectionId": "schedules", "maxSelect": 1}},
+      {"name": "professor_id", "type": "relation", "required": true, "options": {"collectionId": "professors", "maxSelect": 1}},
+      {"name": "start_time", "type": "date", "required": true},
+      {"name": "end_time", "type": "date"},
+      {"name": "status", "type": "select", "required": true, "options": {"maxSelect": 1, "values": ["Active", "Closed", "Cancelled"]}},
+      {"name": "total_students", "type": "number", "options": {"min": 0, "noDecimal": true}},
+      {"name": "present_count", "type": "number", "options": {"min": 0, "noDecimal": true}},
+      {"name": "absent_count", "type": "number", "options": {"min": 0, "noDecimal": true}}
+    ],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  },
+  {
+    "name": "attendance_records",
+    "type": "base",
+    "schema": [
+      {"name": "student_id", "type": "relation", "required": true, "options": {"collectionId": "students", "maxSelect": 1}},
+      {"name": "session_id", "type": "relation", "required": true, "options": {"collectionId": "sessions", "maxSelect": 1}},
+      {"name": "subject_id", "type": "relation", "required": true, "options": {"collectionId": "subjects", "maxSelect": 1}},
+      {"name": "check_in_time", "type": "date", "required": true},
+      {"name": "status", "type": "select", "required": true, "options": {"maxSelect": 1, "values": ["Present", "Absent", "Late", "Excused"]}},
+      {"name": "verified", "type": "bool"}
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_att_student_session ON attendance_records (student_id, session_id)"],
+    "listRule": "", "viewRule": "", "createRule": "@request.auth.id != ''", "updateRule": "@request.auth.id != ''", "deleteRule": "@request.auth.id != ''"
+  }
+]
