@@ -1,0 +1,15 @@
+app = "attend-web-mohamed-260417"
+primary_region = "ams"
+
+[build]
+  dockerfile = "Dockerfile"
+  [build.args]
+    VITE_API_BASE_URL = "https://attend-pb-mohamed-260417.fly.dev"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_start_machines = true
+  auto_stop_machines = "stop"
+  min_machines_running = 0
+  processes = ["app"]

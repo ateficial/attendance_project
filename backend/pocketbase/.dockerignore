@@ -1,0 +1,6 @@
+pb_data
+*.exe
+*.zip
+node_modules
+.git
+.gitignore
