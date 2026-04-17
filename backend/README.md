@@ -23,11 +23,12 @@ If the script doesn't work, do these steps manually:
 
 ### 2. Start PocketBase
 ```powershell
-.\pocketbase.exe serve --hooksDir=pb_hooks --migrationsDir=pb_migrations
+.\pocketbase.exe serve --http="0.0.0.0:8090" --hooksDir=pb_hooks --migrationsDir=pb_migrations
 ```
 
 ### 3. Create Admin Account
-- Open http://127.0.0.1:8090/_/
+- Local machine: http://127.0.0.1:8090/_/
+- Other devices on the same Wi-Fi: http://YOUR_PC_LAN_IP:8090/_/
 - Create your admin account
 
 ### 4. Import Schema

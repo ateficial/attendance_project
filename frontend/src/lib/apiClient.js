@@ -4,7 +4,10 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8090").replace(/\/+$/, "");
+const DEFAULT_API_BASE_URL = import.meta.env.DEV
+  ? window.location.origin
+  : `http://${window.location.hostname}:8090`;
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/+$/, "");
 
 export class ApiError extends Error {
   constructor(message, status, code, payload) {

@@ -9,6 +9,24 @@ $ErrorActionPreference = "Stop"
 $PB_VERSION = "0.25.9"
 $PB_DIR = $PSScriptRoot
 if (-not $PB_DIR) { $PB_DIR = Get-Location }
+$PB_HTTP_ADDR = "0.0.0.0:8090"
+
+function Get-PrimaryLanIp {
+    try {
+        $ips = [System.Net.Dns]::GetHostAddresses([System.Net.Dns]::GetHostName()) |
+            Where-Object {
+                $_.AddressFamily -eq [System.Net.Sockets.AddressFamily]::InterNetwork -and
+                -not $_.IPAddressToString.StartsWith("127.")
+            }
+        if ($ips -and $ips.Count -gt 0) {
+            return $ips[0].IPAddressToString
+        }
+    } catch {
+        return $null
+    }
+
+    return $null
+}
 
 Write-Host ""
 Write-Host "=========================================" -ForegroundColor Cyan
@@ -88,13 +106,21 @@ if ($migrationFiles.Count -gt 0) {
 Write-Host ""
 Write-Host "[4/4] Starting PocketBase..." -ForegroundColor Yellow
 Write-Host ""
+$LAN_IP = Get-PrimaryLanIp
+$LOCAL_URL = "http://127.0.0.1:8090"
+$LAN_URL = if ($LAN_IP) { "http://$LAN_IP:8090" } else { $null }
+
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "  PocketBase will start on:" -ForegroundColor White
-Write-Host "    API:   http://127.0.0.1:8090" -ForegroundColor White
-Write-Host "    Admin: http://127.0.0.1:8090/_/" -ForegroundColor White
+Write-Host "    API:   $LOCAL_URL" -ForegroundColor White
+Write-Host "    Admin: $LOCAL_URL/_/" -ForegroundColor White
+if ($LAN_URL) {
+    Write-Host "    LAN:   $LAN_URL" -ForegroundColor Green
+    Write-Host "    LAN Admin: $LAN_URL/_/" -ForegroundColor Green
+}
 Write-Host "" 
 Write-Host "  First time? Create admin account at:" -ForegroundColor White
-Write-Host "    http://127.0.0.1:8090/_/#/login" -ForegroundColor Yellow
+Write-Host "    $LOCAL_URL/_/#/login" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "  Then import schema from:" -ForegroundColor White
 Write-Host "    Settings > Import Collections" -ForegroundColor Yellow
@@ -113,4 +139,4 @@ Write-Host "  Press Ctrl+C to stop." -ForegroundColor Gray
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host ""
 
-& $PB_EXE serve --hooksDir="$hooksDir" --migrationsDir="$migrationsDir"
+& $PB_EXE serve --http="$PB_HTTP_ADDR" --hooksDir="$hooksDir" --migrationsDir="$migrationsDir"

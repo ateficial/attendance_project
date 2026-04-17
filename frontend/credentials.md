@@ -1,6 +1,7 @@
 ### 1. PocketBase Administrative Access
 This is the "Root" access used for managing the database, collections, and custom scripts.
-- **Admin Panel URL**: [http://127.0.0.1:8090/_/](http://127.0.0.1:8090/_/)
+- **Admin Panel URL (Local PC)**: [http://127.0.0.1:8090/_/](http://127.0.0.1:8090/_/)
+- **Admin Panel URL (LAN)**: `http://YOUR_PC_LAN_IP:8090/_/`
 - **Email/Identity**: admin@attendance.edu
 - **Password**: adminpassword123
 
@@ -68,5 +69,6 @@ These credentials are used on the main login page of your React application.
 
 ### 3. Developer / Technical Details
 - **JWT Secret**: smart-attendance-jwt-v1 (Used in backend hooks)
-- **API Base URL**: http://127.0.0.1:8090
-- **Frontend URL**: http://localhost:5173 (Standard Vite port)
+- **API Base URL**: Defaults to same-origin in development (`window.location.origin`) and can be overridden with `VITE_API_BASE_URL`
+- **Frontend URL (Local PC)**: http://localhost:3000
+- **Frontend URL (LAN)**: `http://YOUR_PC_LAN_IP:3000`
