@@ -11,3 +11,7 @@ primary_region = "ams"
   auto_stop_machines = "stop"
   min_machines_running = 0
   processes = ["app"]
+
+[[mounts]]
+  source = "pb_data"
+  destination = "/pb_data"
